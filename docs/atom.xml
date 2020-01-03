@@ -3,11 +3,11 @@
   <title>李洋华</title>
   
   
-  <link href="/atom.xml" rel="self"/>
+  <link href="/blog/atom.xml" rel="self"/>
   
-  <link href="https://erichmlyh.github.io/blog/"/>
+  <link href="https://erichmlyh.github.io/"/>
   <updated>2020-01-03T04:43:57.618Z</updated>
-  <id>https://erichmlyh.github.io/blog/</id>
+  <id>https://erichmlyh.github.io/</id>
   
   <author>
     <name>liyanghua</name>
@@ -18,8 +18,8 @@
   
   <entry>
     <title>2020目标</title>
-    <link href="https://erichmlyh.github.io/blog/2020/01/03/2020%E7%9B%AE%E6%A0%87/"/>
-    <id>https://erichmlyh.github.io/blog/2020/01/03/2020%E7%9B%AE%E6%A0%87/</id>
+    <link href="https://erichmlyh.github.io/2020/01/03/2020%E7%9B%AE%E6%A0%87/"/>
+    <id>https://erichmlyh.github.io/2020/01/03/2020%E7%9B%AE%E6%A0%87/</id>
     <published>2020-01-03T04:36:44.999Z</published>
     <updated>2020-01-03T04:43:57.618Z</updated>
     
@@ -38,12 +38,12 @@
     </summary>
     
     
-      <category term="生活" scheme="https://erichmlyh.github.io/blog/categories/%E7%94%9F%E6%B4%BB/"/>
+      <category term="生活" scheme="https://erichmlyh.github.io/categories/%E7%94%9F%E6%B4%BB/"/>
     
     
-      <category term="规划" scheme="https://erichmlyh.github.io/blog/tags/%E8%A7%84%E5%88%92/"/>
+      <category term="规划" scheme="https://erichmlyh.github.io/tags/%E8%A7%84%E5%88%92/"/>
     
-      <category term="目标" scheme="https://erichmlyh.github.io/blog/tags/%E7%9B%AE%E6%A0%87/"/>
+      <category term="目标" scheme="https://erichmlyh.github.io/tags/%E7%9B%AE%E6%A0%87/"/>
     
   </entry>
   

@@ -1,7 +1,7 @@
 <%
     // 使用 sns 直接分享接口
     // 微信使用 qrcode helper 或 http://goqr.me/api/ 生成二维码
-    var sUrl = url.replace(/index\.html$/, '')
+    var sUrl = config.shareUrl.replace(/index\.html$/, '')
     var sTitle = page.title ? '《'+ page.title +'》 — ' + config.title : config.title
     var sDesc = truncate(strip_html(page.excerpt || config.description), { length: 80})
     var sPic = page.photos && page.photos.length ? page.photos[0]
