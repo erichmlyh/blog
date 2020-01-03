@@ -8,7 +8,7 @@ subtitle: ''
 description: ''
 keywords:
 author: liyanghua
-language: ch
+language: zh-CN
 timezone: ''
 
 # URL
@@ -98,4 +98,6 @@ theme: indigo
 # Deployment
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
-  type: ''
+  type: git
+    repository: https://github.com/erichmlyh/erichmlyh.github.io.git
+    branch: master
