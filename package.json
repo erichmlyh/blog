@@ -5,7 +5,7 @@
   "scripts": {
     "build": "hexo generate",
     "clean": "hexo clean",
-    "deploy": "npm run build && git add . && git commit -m 'build: auto push' && git push",
+    "deploy": "rm -rf docs && npm run build && git add . && git commit -m 'build: auto push' && git push",
     "serve": "hexo server"
   },
   "hexo": {
