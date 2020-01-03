@@ -3,11 +3,11 @@
   <title>李洋华</title>
   
   
-  <link href="/atom.xml" rel="self"/>
+  <link href="/blog/atom.xml" rel="self"/>
   
-  <link href="http://yoursite.com/"/>
-  <updated>2020-01-03T01:08:41.806Z</updated>
-  <id>http://yoursite.com/</id>
+  <link href="https://erichmlyh.github.io/"/>
+  <updated>2020-01-03T04:43:57.618Z</updated>
+  <id>https://erichmlyh.github.io/</id>
   
   <author>
     <name>liyanghua</name>
@@ -17,24 +17,33 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>Hello World</title>
-    <link href="http://yoursite.com/2020/01/03/hello-world/"/>
-    <id>http://yoursite.com/2020/01/03/hello-world/</id>
-    <published>2020-01-03T01:08:41.806Z</published>
-    <updated>2020-01-03T01:08:41.806Z</updated>
+    <title>2020目标</title>
+    <link href="https://erichmlyh.github.io/2020/01/03/2020%E7%9B%AE%E6%A0%87/"/>
+    <id>https://erichmlyh.github.io/2020/01/03/2020%E7%9B%AE%E6%A0%87/</id>
+    <published>2020-01-03T04:36:44.999Z</published>
+    <updated>2020-01-03T04:43:57.618Z</updated>
     
-    <content type="html"><![CDATA[<p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p><h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p><h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p><h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure><p>More info: <a href="https://hexo.io/docs/one-command-deployment.html" target="_blank" rel="noopener">Deployment</a></p>]]></content>
+    <content type="html"><![CDATA[<h2 id="家庭目标"><a href="#家庭目标" class="headerlink" title="家庭目标"></a>家庭目标</h2><ul><li>财务上<ul><li>家庭整理收入，存款增加****</li><li>lyh上缴****大洋，方式不论（理财也算）</li><li>实现较为合理的财富分配（相对高风险、稳定收入、抵御分险的现金部分的比例）</li><li>提高非工资收入的占比，目标10%；</li></ul></li><li>家庭和谐上<ul><li>苗苗帮我理发三次</li><li>一起为家人做一顿饭</li><li>每周独立带娃一天（做饭除外，不要求其他人一起帮忙带，可让其他人自由的玩耍，当然小麦主动要求是小麦的权利）</li></ul></li></ul><hr><h2 id="个人目标"><a href="#个人目标" class="headerlink" title="个人目标"></a>个人目标</h2><ul><li>能力上<ul><li>内容管理：内容整理能力（归档文件、书签栏、思绪等）。</li><li>时间管理：对时间的的利用率更高：不要出现为了消磨时间而浪费。</li><li>金钱管理：让投资更有规划，对于风口性的东西，有参与意识，而非观众</li><li>向上管理</li><li>向下管理</li><li>做事，懂得轻重缓急；</li></ul></li><li>学习上<ul><li>宏观、微观经济学有一定了解</li><li>对股票术语至少能听懂</li><li>深入vue3.0（若工作上还是vue技术栈）的技术栈； 若是react，深入react hook及react技术栈</li><li>做一个开源项目，努力达到100star以上</li></ul></li><li>工作上<ul><li>主导工作上技术的选型</li><li>对业务有自己的思考</li></ul></li><li>健康上<ul><li>保证平均每天半小时运动（打篮球、仰卧起坐，靠墙站也算）</li></ul></li><li>可落地检验的指标<ul><li><strong>每晚睡前10分钟，回顾下一天的事情</strong></li><li>10本书，并有相关读书笔记活心得</li><li>产出50篇技术文章，发表地点暂定掘金</li><li><strong>非必要，11点半前睡觉</strong></li><li>2020年年底，体重稳定在130斤左右</li><li>腹部无赘肉，细看能找到6块腹肌的纹路</li><li>带小麦去稍微远点的地方（需要过夜那种）地方玩，有条件带着父母也远游下</li><li>至少主动策划三次有仪式感的节日</li></ul></li></ul><hr><h2 id="5年，更长"><a href="#5年，更长" class="headerlink" title="5年，更长"></a>5年，更长</h2><ul><li>个人成长: 待稳定后规划</li><li>家庭财务: 加上房产2025年 ****</li></ul>]]></content>
     
     <summary type="html">
     
       
       
-        &lt;p&gt;Welcome to &lt;a href=&quot;https://hexo.io/&quot; target=&quot;_blank&quot; rel=&quot;noopener&quot;&gt;Hexo&lt;/a&gt;! This is your very first post. Check &lt;a href=&quot;https://hexo.
+        &lt;h2 id=&quot;家庭目标&quot;&gt;&lt;a href=&quot;#家庭目标&quot; class=&quot;headerlink&quot; title=&quot;家庭目标&quot;&gt;&lt;/a&gt;家庭目标&lt;/h2&gt;&lt;ul&gt;
+&lt;li&gt;财务上&lt;ul&gt;
+&lt;li&gt;家庭整理收入，存款增加****&lt;/li&gt;
+&lt;li&gt;lyh上缴****大洋，方式不论（理财
       
     
     </summary>
     
     
+      <category term="生活" scheme="https://erichmlyh.github.io/categories/%E7%94%9F%E6%B4%BB/"/>
+    
+    
+      <category term="规划" scheme="https://erichmlyh.github.io/tags/%E8%A7%84%E5%88%92/"/>
+    
+      <category term="目标" scheme="https://erichmlyh.github.io/tags/%E7%9B%AE%E6%A0%87/"/>
     
   </entry>
   
