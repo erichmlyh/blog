@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-  <title>李洋华</title>
+  <title>无糖咖啡 blog</title>
   
   <subtitle>inner peace</subtitle>
   <link href="/blog/atom.xml" rel="self"/>
@@ -10,7 +10,7 @@
   <id>https://erichmlyh.github.io/</id>
   
   <author>
-    <name>liyanghua</name>
+    <name>李洋华</name>
     
   </author>
   
