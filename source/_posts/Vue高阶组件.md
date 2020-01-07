@@ -1,7 +1,12 @@
 ---
 title: Vue高阶组件
 date: 2020-01-07 16:41:18
+categories: 
+- 技术
 tags:
+- vue
+- javascript
+- HoC
 ---
 
 高阶组件(`HOC`)全称 `Higher-Order Components`, 在`React`中复用代码最主要的方式，也是[官方推荐](http://react.html.cn/docs/higher-order-components.html)的一种模式。然而，在`Vue`生态中，却很少采用，而是推荐[mixin]((https://cn.vuejs.org/v2/guide/mixins.html))方式。
