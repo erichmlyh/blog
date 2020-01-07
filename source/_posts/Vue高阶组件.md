@@ -22,11 +22,11 @@ tags:
 对于`react`,组件的本质第一反应是`class`, 而`class`的本质是函数,当然纯函数组件也是函数。
 对于`vue`,组件的本质是表面来看是`object`, 其实`Vue`中组件是一个被包装的函数，并不简单的就是我们定义组件的时候传入的对象。 具体请参考[组件的本质](http://hcysun.me/vue-design/zh/essence-of-comp.html#%E7%BB%84%E4%BB%B6%E7%9A%84%E4%BA%A7%E5%87%BA%E6%98%AF%E4%BB%80%E4%B9%88)
 
-所以，什么是高阶组件，其实就是高阶函数。对于`vue`，形式不太一样，需要参数一个对象，然后返回一个对象。
+所以，什么是高阶组件，其实就是高阶函数。对于`vue`，形式不太一样，需要参数传入一个对象，然后返回一个对象。
 
 ## 实现一个简单的vue高阶组件
 
-需求：记录一个组件活了多久，即统计下组件从`mounted`开始，到`destroyed`一共耗时。
+需求：记录一个组件活了多久，即统计下组件从`mounted`开始，到`destroyed`一共耗时多少ms。
 
 ``` javascript
 // WithLifeTime.js
@@ -102,8 +102,8 @@ export default function WithLifeTime(WrappedComponent) {
 <template>
   <div class="base-component">
     <button @click="$emit('click', $event)">props: {{text}}</button>
-    <slot name="namedSlot" childToParent="fromBaseComponent.vue"></slot>
     <slot></slot>
+    <slot name="namedSlot" childToParent="fromBaseComponent.vue"></slot>
   </div>
 </template>
 
@@ -238,7 +238,7 @@ export default function WithLifeTime(WrappedComponent) {
 
 ```
 结果：
-![](scopedSlot值未传递进去.png)
+![](scopedSlot.png)
 
 `scopedSlots`值没传递下去（先待定，找时间补上）
 
