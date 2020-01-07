@@ -238,7 +238,7 @@ export default function WithLifeTime(WrappedComponent) {
 
 ```
 结果：
-![](scopedSlot.png)
+![](scopedSlot.jpg)
 
 `scopedSlots`值没传递下去（先待定，找时间补上）
 
