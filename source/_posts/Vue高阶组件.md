@@ -117,7 +117,7 @@ export default {
 </script>
 ```
 
-测试代码，分别渲染`BaseComponent.vue`和被`WithLifeTime包裹后的BaseComponent.vue`
+测试代码，分别渲染`BaseComponent.vue`和被`WithLifeTime`包裹后的`BaseComponent.vue`
 ```html
 <!-- HoC.vue -->
 
@@ -156,7 +156,7 @@ export default {
 
 ![](noslot.png)
 
-下面，我们更改下`WithLifeTime`
+下面，我们更改下`WithLifeTime`, 增加 `scopedSlots: this.$scopedSlots`
 ```javascript
 export default function WithLifeTime(WrappedComponent) {
   return {
@@ -170,39 +170,25 @@ export default function WithLifeTime(WrappedComponent) {
       );
     },
     render(h) {
-      // 将 this.$scopedSlots 格式化为数组
-      const children = Object.keys(this.$scopedSlots).reduce(
-        (arr, key) => arr.concat(this.$scopedSlots[key]()),
-        []
-      );
-
       return h(
         WrappedComponent,
         {
           on: this.$listeners,
           attrs: this.$attrs,
-          props: this.$props
+          props: this.$props,
+          scopedSlots: this.$scopedSlots
         },
-        children
       );
     }
   };
 }
 
 ```
-查看运行结果，有两个问题：
-1. 默认插槽和具名插槽顺序有问题
-2. scopedSlots的值没穿进去
 
-![](slotwrong.png)
+![](emptySlot.png)
 
-先来看`第一个`，顺序问题：
-`vue`在渲染具名`slot`的时候，会对比`$vnode.context`（用来表示渲染该组件的上下文）,`BaseComponent.vue`中的具名slot渲染成的`vnode`拿到的`context`是`HoC`的上下文；但是`BaseComponent.vue`的上下文环境是在`WithLifeTime`中。所以传入的具名组件被当成了默认组件。
-更改后的`WithLifeTime`
-
+这是因为没有把`$slots`透传进去，我们处理下`$slots`
 ```javascript
-// WithLifeTime.js
-
 export default function WithLifeTime(WrappedComponent) {
   return {
     mounted() {
@@ -215,9 +201,9 @@ export default function WithLifeTime(WrappedComponent) {
       );
     },
     render(h) {
-      // 将 this.$scopedSlots 格式化为数组
-      const children = Object.keys(this.$scopedSlots)
-        .reduce((arr, key) => arr.concat(this.$scopedSlots[key]()), [])
+      /// 将 this.$slots 转化为数组
+      const children = Object.keys(this.$slots)
+        .reduce((arr, key) => arr.concat(this.$slots[key]), [])
         .map(vnode => {
           vnode.context = this._self;
           return vnode;
@@ -228,7 +214,8 @@ export default function WithLifeTime(WrappedComponent) {
         {
           on: this.$listeners,
           attrs: this.$attrs,
-          props: this.$props
+          props: this.$props,
+          scopedSlots: this.$scopedSlots
         },
         children
       );
@@ -237,10 +224,14 @@ export default function WithLifeTime(WrappedComponent) {
 }
 
 ```
-结果：
-![](scopedSlot.jpg)
 
-`scopedSlots`值没传递下去（先待定，找时间补上）
+解释下`第16行`为什么要用map处理下`context`:
+`vue`在渲染不带参数的具名插槽的时候，会对比`$vnode.context`（用来表示渲染该组件的上下文）,`BaseComponent.vue`中的具名slot渲染成的`vnode`拿到的`context`是`HoC`的上下文；但是`BaseComponent.vue`的上下文环境是在`WithLifeTime`中。所以传入的不带参数具名组件被当成了默认组件。
+
+如果将`map`去掉, `BaseComponent`实例化后拿到的`$slot`值会不一致；
+![](mapSlots.png)
+
+
 
 ## 后记
 
