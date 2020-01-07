@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+    
+
+    
+
+
+
+    <meta charset="utf-8">
+    
+    
+    
+    
+    <title>Vue高阶组件 | 无糖咖啡 blog | inner peace</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    
+    <meta name="theme-color" content="#3F51B5">
+    
+    
+    <meta name="keywords" content="">
+    <meta name="description" content="高阶组件(HOC)全称 Higher-Order Components, 在React中复用代码最主要的方式，也是官方推荐的一种模式。然而，在Vue生态中，却很少采用，而是推荐mixin方式。本文不去对比这hoc和mixin这两种实现的优劣，旨在探索用hoc的方式去实现vue的高阶组件，并从中得到为何vue少于用hoc实现组件的复用。 什么是高阶组件说高阶组件之前，先来看下什么是高阶函数和组件 在">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vue高阶组件">
+<meta property="og:url" content="https://erichmlyh.github.io/2020/01/07/Vue%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/index.html">
+<meta property="og:site_name" content="无糖咖啡 blog">
+<meta property="og:description" content="高阶组件(HOC)全称 Higher-Order Components, 在React中复用代码最主要的方式，也是官方推荐的一种模式。然而，在Vue生态中，却很少采用，而是推荐mixin方式。本文不去对比这hoc和mixin这两种实现的优劣，旨在探索用hoc的方式去实现vue的高阶组件，并从中得到为何vue少于用hoc实现组件的复用。 什么是高阶组件说高阶组件之前，先来看下什么是高阶函数和组件 在">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://erichmlyh.github.io/blog/2020/01/07/Vue%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/noslot.png">
+<meta property="og:image" content="https://erichmlyh.github.io/blog/2020/01/07/Vue%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/slotwrong.png">
+<meta property="og:image" content="https://erichmlyh.github.io/blog/2020/01/07/Vue%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/scopedSlot%E5%80%BC%E6%9C%AA%E4%BC%A0%E9%80%92%E8%BF%9B%E5%8E%BB.png">
+<meta property="article:published_time" content="2020-01-07T08:41:18.000Z">
+<meta property="article:modified_time" content="2020-01-07T10:20:16.316Z">
+<meta property="article:author" content="李洋华">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://erichmlyh.github.io/blog/2020/01/07/Vue%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/noslot.png">
+    
+        <link rel="alternate" type="application/atom+xml" title="无糖咖啡 blog" href="/blog/atom.xml">
+    
+    <link rel="shortcut icon" href="/blog/./img/favicon.png">
+    <link rel="stylesheet" href="//unpkg.com/hexo-theme-material-indigo@latest/css/style.css">
+    <script>window.lazyScripts=[]</script>
+
+    <!-- custom head -->
+    
+
+<meta name="generator" content="Hexo 4.2.0"></head>
+
+<body>
+    <div id="loading" class="active"></div>
+
+    <aside id="menu" class="hide" >
+  <div class="inner flex-row-vertical">
+    <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menu-off">
+        <i class="icon icon-lg icon-close"></i>
+    </a>
+    <div class="brand-wrap" style="background-image:url(/blog/./img/bg.png)">
+      <div class="brand">
+        <a href="/blog/" class="avatar waves-effect waves-circle waves-light">
+          <img src="https://himg.bdimg.com/sys/portrait/item/pp.1.5074730b.lYVoXN7skc2qZvHRo3ncgA.jpg">
+        </a>
+        <hgroup class="introduce">
+          <h5 class="nickname">李洋华</h5>
+          <a href="mailto:erichmlyh@163.com" title="erichmlyh@163.com" class="mail">erichmlyh@163.com</a>
+        </hgroup>
+      </div>
+    </div>
+    <div class="scroll-wrap flex-col">
+      <ul class="nav">
+        
+            <li class="waves-block waves-effect">
+              <a href="/blog/"  >
+                <i class="icon icon-lg icon-home"></i>
+                Home
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/blog/archives"  >
+                <i class="icon icon-lg icon-archives"></i>
+                Archives
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="/blog/tags"  >
+                <i class="icon icon-lg icon-tags"></i>
+                Tags
+              </a>
+            </li>
+        
+            <li class="waves-block waves-effect">
+              <a href="https://github.com/erichmlyh" target="_blank" >
+                <i class="icon icon-lg icon-github"></i>
+                Github
+              </a>
+            </li>
+        
+      </ul>
+    </div>
+  </div>
+</aside>
+
+    <main id="main">
+        <header class="top-header" id="header">
+    <div class="flex-row">
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light on" id="menu-toggle">
+          <i class="icon icon-lg icon-navicon"></i>
+        </a>
+        <div class="flex-col header-title ellipsis">Vue高阶组件</div>
+        
+        <div class="search-wrap" id="search-wrap">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="back">
+                <i class="icon icon-lg icon-chevron-left"></i>
+            </a>
+            <input type="text" id="key" class="search-input" autocomplete="off" placeholder="输入感兴趣的关键字">
+            <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="search">
+                <i class="icon icon-lg icon-search"></i>
+            </a>
+        </div>
+        
+        
+        <a href="javascript:;" class="header-icon waves-effect waves-circle waves-light" id="menuShare">
+            <i class="icon icon-lg icon-share-alt"></i>
+        </a>
+        
+    </div>
+</header>
+<header class="content-header post-header">
+
+    <div class="container fade-scale">
+        <h1 class="title">Vue高阶组件</h1>
+        <h5 class="subtitle">
+            
+                <time datetime="2020-01-07T08:41:18.000Z" itemprop="datePublished" class="page-time">
+  2020-01-07
+</time>
+
+
+            
+        </h5>
+    </div>
+
+    
+
+
+</header>
+
+
+<div class="container body-wrap">
+    
+    <aside class="post-widget">
+        <nav class="post-toc-wrap post-toc-shrink" id="post-toc">
+            <h4>TOC</h4>
+            <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#什么是高阶组件"><span class="post-toc-number">1.</span> <span class="post-toc-text">什么是高阶组件</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#实现一个简单的vue高阶组件"><span class="post-toc-number">2.</span> <span class="post-toc-text">实现一个简单的vue高阶组件</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#父子组件通信"><span class="post-toc-number">3.</span> <span class="post-toc-text">父子组件通信</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#解决-props-和-emit-通信方式"><span class="post-toc-number">4.</span> <span class="post-toc-text">解决 props 和 $emit 通信方式</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#解决高阶组件v-slot的传递"><span class="post-toc-number">5.</span> <span class="post-toc-text">解决高阶组件v-slot的传递</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#后记"><span class="post-toc-number">6.</span> <span class="post-toc-text">后记</span></a></li></ol>
+        </nav>
+    </aside>
+
+
+<article id="post-Vue高阶组件"
+  class="post-article article-type-post fade" itemprop="blogPost">
+
+    <div class="post-card">
+        <h1 class="post-card-title">Vue高阶组件</h1>
+        <div class="post-meta">
+            <time class="post-time" title="2020-01-07 16:41:18" datetime="2020-01-07T08:41:18.000Z"  itemprop="datePublished">2020-01-07</time>
+
+            
+
+
+            
+<span id="busuanzi_container_page_pv" title="文章总阅读量" style='display:none'>
+    <i class="icon icon-eye icon-pr"></i><span id="busuanzi_value_page_pv"></span>
+</span>
+
+
+        </div>
+        <div class="post-content" id="post-content" itemprop="postContent">
+            <p>高阶组件(<code>HOC</code>)全称 <code>Higher-Order Components</code>, 在<code>React</code>中复用代码最主要的方式，也是<a href="http://react.html.cn/docs/higher-order-components.html" target="_blank" rel="noopener">官方推荐</a>的一种模式。然而，在<code>Vue</code>生态中，却很少采用，而是推荐<a href="(https://cn.vuejs.org/v2/guide/mixins.html)">mixin</a>方式。<br>本文不去对比这<code>hoc</code>和<code>mixin</code>这两种实现的优劣，旨在探索用<code>hoc</code>的方式去实现<code>vue</code>的高阶组件，并从中得到为何<code>vue</code>少于用<code>hoc</code>实现组件的复用。</p>
+<h2 id="什么是高阶组件"><a href="#什么是高阶组件" class="headerlink" title="什么是高阶组件"></a>什么是高阶组件</h2><p>说高阶组件之前，先来看下什么是<code>高阶函数</code>和<code>组件</code></p>
+<p>在维基百科中对<a href="https://zh.wikipedia.org/wiki/%E9%AB%98%E9%98%B6%E5%87%BD%E6%95%B0" target="_blank" rel="noopener">高阶函数</a>的定义。简单来说，就是传入参数有函数，返回的参数是一个函数。</p>
+<p>组件，我们对比下<code>react</code>和<code>vue</code>: </p>
+<p>对于<code>react</code>,组件的本质第一反应是<code>class</code>, 而<code>class</code>的本质是函数,当然纯函数组件也是函数。<br>对于<code>vue</code>,组件的本质是表面来看是<code>object</code>, 其实<code>Vue</code>中组件是一个被包装的函数，并不简单的就是我们定义组件的时候传入的对象。 具体请参考<a href="http://hcysun.me/vue-design/zh/essence-of-comp.html#%E7%BB%84%E4%BB%B6%E7%9A%84%E4%BA%A7%E5%87%BA%E6%98%AF%E4%BB%80%E4%B9%88" target="_blank" rel="noopener">组件的本质</a></p>
+<p>所以，什么是高阶组件，其实就是高阶函数。对于<code>vue</code>，形式不太一样，需要参数一个对象，然后返回一个对象。</p>
+<h2 id="实现一个简单的vue高阶组件"><a href="#实现一个简单的vue高阶组件" class="headerlink" title="实现一个简单的vue高阶组件"></a>实现一个简单的vue高阶组件</h2><p>需求：记录一个组件活了多久，即统计下组件从<code>mounted</code>开始，到<code>destroyed</code>一共耗时。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// WithLifeTime.js</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">WithLifeTime</span>(<span class="params">WrappedComponent</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">        mounted() &#123;</span><br><span class="line">            <span class="keyword">this</span>._startTime = +<span class="keyword">new</span> <span class="built_in">Date</span></span><br><span class="line">        &#125;,</span><br><span class="line">        destroyed() &#123;</span><br><span class="line">            <span class="built_in">console</span>.log(</span><br><span class="line">              <span class="string">`该组件的生命周期时长为： <span class="subst">$&#123;+<span class="keyword">new</span> <span class="built_in">Date</span>() - <span class="keyword">this</span>._startTime&#125;</span>ms`</span></span><br><span class="line">            );</span><br><span class="line">        &#125;,</span><br><span class="line">        render(h) &#123;</span><br><span class="line">            <span class="keyword">return</span> h(WrappedComponent);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当<code>WrappedComponent</code>不需要和父组件进行任何通信的时候，发现，并没有任何问题。但是孤立的组件其实是没有太大的意义的。那么，需要怎么通信呢?</p>
+<h2 id="父子组件通信"><a href="#父子组件通信" class="headerlink" title="父子组件通信"></a>父子组件通信</h2><p>父子组件通信的方法很多，仅讨论<code>vue</code>本身实现，主要是：</p>
+<ol>
+<li><code>props</code> 和 <code>$emit</code></li>
+<li><code>v-slot</code></li>
+<li><code>provide</code> &amp; <code>inject</code> </li>
+</ol>
+<p>其中，<code>1</code>和<code>2</code>在做<code>HOC</code>时需要考虑，<code>3</code>不需要考虑</p>
+<h2 id="解决-props-和-emit-通信方式"><a href="#解决-props-和-emit-通信方式" class="headerlink" title="解决 props 和 $emit 通信方式"></a>解决 <code>props</code> 和 <code>$emit</code> 通信方式</h2><p>需在高阶组件中申明<code>props</code>，否则实例化时，<code>this.$props</code>将是空对象。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// WithLifeTime.js</span></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">WithLifeTime</span>(<span class="params">WrappedComponent</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> &#123;</span><br><span class="line">      mounted() &#123;</span><br><span class="line">        <span class="keyword">this</span>._startTime = +<span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">      &#125;,</span><br><span class="line">      props: WrappedComponent.props, <span class="comment">// 不申明props,实例化时，this.$props将是空对象</span></span><br><span class="line">      destroyed() &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(</span><br><span class="line">          <span class="string">`该组件的生命周期时长为： <span class="subst">$&#123;+<span class="keyword">new</span> <span class="built_in">Date</span>() - <span class="keyword">this</span>._startTime&#125;</span>ms`</span></span><br><span class="line">        );</span><br><span class="line">      &#125;,</span><br><span class="line">      render(h) &#123;</span><br><span class="line">        <span class="keyword">return</span> h(WrappedComponent, &#123;</span><br><span class="line">          on: <span class="keyword">this</span>.$listeners,</span><br><span class="line">          attrs: <span class="keyword">this</span>.$attrs,</span><br><span class="line">          props: <span class="keyword">this</span>.$props</span><br><span class="line">        &#125;);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面组件完成了</p>
+<blockquote>
+<p>1、透传 props<br>2、透传没有被声明为 props 的属性<br>3、透传事件</p>
+</blockquote>
+<h2 id="解决高阶组件v-slot的传递"><a href="#解决高阶组件v-slot的传递" class="headerlink" title="解决高阶组件v-slot的传递"></a>解决高阶组件<code>v-slot</code>的传递</h2><p>先看下 <code>BaseComponent.vue</code>的内容，该组件是被高阶组件包裹的组件，用于测试<code>HOC</code>组件功能是否正确。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- BaseComponent.vue --&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"base-component"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">button</span> @<span class="attr">click</span>=<span class="string">"$emit('click', $event)"</span>&gt;</span>props: &#123;&#123;text&#125;&#125;<span class="tag">&lt;/<span class="name">button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">slot</span> <span class="attr">name</span>=<span class="string">"namedSlot"</span> <span class="attr">childToParent</span>=<span class="string">"fromBaseComponent.vue"</span>&gt;</span><span class="tag">&lt;/<span class="name">slot</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">slot</span>&gt;</span><span class="tag">&lt;/<span class="name">slot</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="actionscript"> name: <span class="string">'BaseComponent'</span>,</span></span><br><span class="line"> props: &#123;</span><br><span class="line"><span class="javascript">   text: <span class="built_in">String</span></span></span><br><span class="line"> &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>测试代码，分别渲染<code>BaseComponent.vue</code>和被<code>WithLifeTime包裹后的BaseComponent.vue</code></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- HoC.vue --&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">template</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">div</span> <span class="attr">class</span>=<span class="string">"hoc"</span> <span class="attr">style</span>=<span class="string">"margin: 50px;"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">base-component</span> <span class="attr">text</span>=<span class="string">"baseComponent"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">p</span>&gt;</span>baseComponent 默认插槽<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">template</span> <span class="attr">v-slot:namedSlot</span>=<span class="string">"&#123;childToParent&#125;"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>baseComponent 具名插槽; &#123;&#123; childToParent &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">base-component</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">hr</span> /&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">wrapper-base-component</span> <span class="attr">text</span>=<span class="string">"wrapperBaseComponent"</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">p</span>&gt;</span>wrapperBaseComponent 默认插槽<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;<span class="name">template</span> <span class="attr">v-slot:namedSlot</span>=<span class="string">"&#123;childToParent&#125;"</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span>&gt;</span>wrapperBaseComponent 具名插槽; &#123;&#123; childToParent &#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">      <span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">wrapper-base-component</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;/<span class="name">div</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">template</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">script</span>&gt;</span></span><br><span class="line"><span class="javascript"><span class="keyword">import</span> BaseComponent <span class="keyword">from</span> <span class="string">"./BaseComponent.vue"</span>;</span></span><br><span class="line"><span class="javascript"><span class="keyword">import</span> WithLifeTime <span class="keyword">from</span> <span class="string">"./WithLifeTime"</span>;</span></span><br><span class="line"></span><br><span class="line"><span class="javascript"><span class="keyword">export</span> <span class="keyword">default</span> &#123;</span></span><br><span class="line"><span class="actionscript">  name: <span class="string">"Hoc"</span>,</span></span><br><span class="line">  components: &#123;</span><br><span class="line">    BaseComponent,</span><br><span class="line">    WrapperBaseComponent: WithLifeTime(BaseComponent)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="tag">&lt;/<span class="name">script</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>在<code>WithLifeTime.js</code>未对<code>slot</code>做处理的情况下，看下运行结果，可以看出，<code>slot</code>未生效。</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/blog/2020/01/07/Vue%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/noslot.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p>下面，我们更改下<code>WithLifeTime</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">WithLifeTime</span>(<span class="params">WrappedComponent</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    mounted() &#123;</span><br><span class="line">      <span class="keyword">this</span>._startTime = +<span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">    &#125;,</span><br><span class="line">    props: WrappedComponent.props, <span class="comment">// 不申明props,实例化时，this.$props将是空对象</span></span><br><span class="line">    destroyed() &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(</span><br><span class="line">        <span class="string">`该组件的生命周期时长为： <span class="subst">$&#123;+<span class="keyword">new</span> <span class="built_in">Date</span>() - <span class="keyword">this</span>._startTime&#125;</span>ms`</span></span><br><span class="line">      );</span><br><span class="line">    &#125;,</span><br><span class="line">    render(h) &#123;</span><br><span class="line">      <span class="comment">// 将 this.$scopedSlots 格式化为数组</span></span><br><span class="line">      <span class="keyword">const</span> children = <span class="built_in">Object</span>.keys(<span class="keyword">this</span>.$scopedSlots).reduce(</span><br><span class="line">        (arr, key) =&gt; arr.concat(<span class="keyword">this</span>.$scopedSlots[key]()),</span><br><span class="line">        []</span><br><span class="line">      );</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> h(</span><br><span class="line">        WrappedComponent,</span><br><span class="line">        &#123;</span><br><span class="line">          on: <span class="keyword">this</span>.$listeners,</span><br><span class="line">          attrs: <span class="keyword">this</span>.$attrs,</span><br><span class="line">          props: <span class="keyword">this</span>.$props</span><br><span class="line">        &#125;,</span><br><span class="line">        children</span><br><span class="line">      );</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>查看运行结果，有两个问题：</p>
+<ol>
+<li>默认插槽和具名插槽顺序有问题</li>
+<li>scopedSlots的值没穿进去</li>
+</ol>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/blog/2020/01/07/Vue%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/slotwrong.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p>先来看<code>第一个</code>，顺序问题：<br><code>vue</code>在渲染具名<code>slot</code>的时候，会对比<code>$vnode.context</code>（用来表示渲染该组件的上下文）,<code>BaseComponent.vue</code>中的具名slot渲染成的<code>vnode</code>拿到的<code>context</code>是<code>HoC</code>的上下文；但是<code>BaseComponent.vue</code>的上下文环境是在<code>WithLifeTime</code>中。所以传入的具名组件被当成了默认组件。<br>更改后的<code>WithLifeTime</code></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// WithLifeTime.js</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> <span class="function"><span class="keyword">function</span> <span class="title">WithLifeTime</span>(<span class="params">WrappedComponent</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> &#123;</span><br><span class="line">    mounted() &#123;</span><br><span class="line">      <span class="keyword">this</span>._startTime = +<span class="keyword">new</span> <span class="built_in">Date</span>();</span><br><span class="line">    &#125;,</span><br><span class="line">    props: WrappedComponent.props, <span class="comment">// 不申明props,实例化时，this.$props将是空对象</span></span><br><span class="line">    destroyed() &#123;</span><br><span class="line">      <span class="built_in">console</span>.log(</span><br><span class="line">        <span class="string">`该组件的生命周期时长为： <span class="subst">$&#123;+<span class="keyword">new</span> <span class="built_in">Date</span>() - <span class="keyword">this</span>._startTime&#125;</span>ms`</span></span><br><span class="line">      );</span><br><span class="line">    &#125;,</span><br><span class="line">    render(h) &#123;</span><br><span class="line">      <span class="comment">// 将 this.$scopedSlots 格式化为数组</span></span><br><span class="line">      <span class="keyword">const</span> children = <span class="built_in">Object</span>.keys(<span class="keyword">this</span>.$scopedSlots)</span><br><span class="line">        .reduce(<span class="function">(<span class="params">arr, key</span>) =&gt;</span> arr.concat(<span class="keyword">this</span>.$scopedSlots[key]()), [])</span><br><span class="line">        .map(<span class="function"><span class="params">vnode</span> =&gt;</span> &#123;</span><br><span class="line">          vnode.context = <span class="keyword">this</span>._self;</span><br><span class="line">          <span class="keyword">return</span> vnode;</span><br><span class="line">        &#125;);</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> h(</span><br><span class="line">        WrappedComponent,</span><br><span class="line">        &#123;</span><br><span class="line">          on: <span class="keyword">this</span>.$listeners,</span><br><span class="line">          attrs: <span class="keyword">this</span>.$attrs,</span><br><span class="line">          props: <span class="keyword">this</span>.$props</span><br><span class="line">        &#125;,</span><br><span class="line">        children</span><br><span class="line">      );</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>结果：</p>
+<figure class="image-bubble">
+                <div class="img-lightbox">
+                    <div class="overlay"></div>
+                    <img src="/blog/2020/01/07/Vue%E9%AB%98%E9%98%B6%E7%BB%84%E4%BB%B6/scopedSlot值未传递进去.png" alt title>
+                </div>
+                <div class="image-caption"></div>
+            </figure>
+
+<p><code>scopedSlots</code>值没传递下去（先待定，找时间补上）</p>
+<h2 id="后记"><a href="#后记" class="headerlink" title="后记"></a>后记</h2><p>文中的<a href="https://github.com/erichmlyh/vueDemo/tree/master/components/HoC" target="_blank" rel="noopener">源码</a>已上传<code>github</code></p>
+<p>本文只提及部分关于<code>vue HOC</code>的实现，对于<code>指令</code>、<code>style</code>、<code>class</code>、<code>domProps</code>等未做讨论，所以对于项目实践中，<code>vue HOC</code>应用相对没那么广泛。在<code>vue 3.0</code>的<code>rfcs</code>中，<code>vnode</code>做出了相应的调整,且看之后发展进程。</p>
+<p>对于组件的复用，在<code>React 16.8</code>后引入<code>React Hook</code>， <code>vue 3.0</code>又提出 <code>Composition API</code>。 或许借鉴，但总归是殊途同归。</p>
+<p>提及或相关但未展开的内容：</p>
+<blockquote>
+<ol>
+<li>技术没有银弹，<code>HOC</code>也不例外，有兴趣可以看下<a href="https://www.youtube.com/watch?reload=9&v=BcVAq3YFiuc" target="_blank" rel="noopener">Michael Jackson - Never Write Another HoC</a></li>
+<li>为何<code>react</code>生态没有采用<code>minxin</code>，可参考<a href="https://reactjs.org/blog/2016/07/13/mixins-considered-harmful.html" target="_blank" rel="noopener">Mixins Considered Harmful</a></li>
+<li><code>vue</code>中，对具名<code>slot</code>关于<code>context</code>处理的<a href="https://github.com/vuejs/vue/blob/dev/src/core/instance/render-helpers/resolve-slots.js#L23-L34" target="_blank" rel="noopener">源码</a>部分</li>
+<li><code>vue</code>中，<code>_self</code>指向自己<a href="https://github.com/vuejs/vue/blob/dev/src/core/instance/init.js#L50-L51" target="_blank" rel="noopener">源码</a>部分</li>
+<li><code>vue</code>的<code>vNode</code>定义在<a href="https://github.com/vuejs/vue/blob/dev/src/core/vdom/vnode.js#L10" target="_blank" rel="noopener">源码</a>中的位</li>
+<li><code>vue 3.0</code>中，对于<code>context</code>将不绑定到<code>vNode</code>实例上，这意味着更加灵活的组件声明位置（不止在.vue文件中，不需要到处传递h参数）; 详见<a href="https://github.com/vuejs/rfcs/blob/master/active-rfcs/0008-render-function-api-change.md" target="_blank" rel="noopener">vue rfcs</a>, 其中原文内容： <code>In 3.0 we have found ways to make VNodes context-free. They can now be created anywhere using the globally imported h function, so it only needs to be imported once in any file.</code></li>
+<li>社区关于<code>vue HOC</code> 的讨论 <a href="https://github.com/vuejs/vue/issues/6201" target="_blank" rel="noopener">Discussion: Best way to create a HOC</a></li>
+</ol>
+</blockquote>
+
+        </div>
+
+        <blockquote class="post-copyright">
+    
+    <div class="content">
+        
+<span class="post-time">
+    最后更新时间：<time datetime="2020-01-07T10:20:16.316Z" itemprop="dateUpdated">2020-01-07 18:20:16</time>
+</span><br>
+
+
+        
+        如果觉得我的文章对您有用，请随意打赏。您的支持将鼓励我继续创作！
+        
+    </div>
+    
+    <footer>
+        <a href="https://erichmlyh.github.io">
+            <img src="https://himg.bdimg.com/sys/portrait/item/pp.1.5074730b.lYVoXN7skc2qZvHRo3ncgA.jpg" alt="李洋华">
+            李洋华
+        </a>
+    </footer>
+</blockquote>
+
+        
+<div class="page-reward">
+    <a id="rewardBtn" href="javascript:;" class="page-reward-btn waves-effect waves-circle waves-light">赏</a>
+</div>
+
+
+
+        <div class="post-footer">
+            
+
+            
+<div class="page-share-wrap">
+    
+
+<div class="page-share" id="pageShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://erichmlyh.github.io/blog&title=《Vue高阶组件》 — 无糖咖啡 blog&pic=https://himg.bdimg.com/sys/portrait/item/pp.1.5074730b.lYVoXN7skc2qZvHRo3ncgA.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://erichmlyh.github.io/blog&title=《Vue高阶组件》 — 无糖咖啡 blog&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://erichmlyh.github.io/blog" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Vue高阶组件》 — 无糖咖啡 blog&url=https://erichmlyh.github.io/blog&via=https://erichmlyh.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://erichmlyh.github.io/blog" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+
+    <a href="javascript:;" id="shareFab" class="page-share-fab waves-effect waves-circle">
+        <i class="icon icon-share-alt icon-lg"></i>
+    </a>
+</div>
+
+
+
+        </div>
+    </div>
+
+    
+<nav class="post-nav flex-row flex-justify-between flex-row-reverse">
+  
+
+  
+    <div class="waves-block waves-effect next">
+      <a href="/blog/2020/01/03/2020%E7%9B%AE%E6%A0%87/" id="post-next" class="post-nav-link">
+        <div class="tips">Next <i class="icon icon-angle-right icon-lg icon-pl"></i></div>
+        <h4 class="title">2020目标</h4>
+      </a>
+    </div>
+  
+</nav>
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+    <!-- Valine Comments -->
+    <div class="comments vcomment" id="comments"></div>
+    <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+    <script src="//unpkg.com/valine@latest/dist/Valine.min.js"></script>
+    <!-- Valine Comments script -->
+    <script>
+        var GUEST_INFO = ['nick','mail','link'];
+        var guest_info = 'nick'.split(',').filter(function(item){
+          return GUEST_INFO.indexOf(item) > -1
+        });
+        new Valine({
+            el: '#comments',
+            notify: 'false' == 'true',
+            verify: 'false' == 'true',
+            appId: "shnt76qGysTA7xxRiOnQvNWJ-gzGzoHsz",
+            appKey: "IwVhsGF30YjxcJSVD1OmPAAH",
+            avatar: "mm",
+            placeholder: "Just go go",
+            guest_info: guest_info.length == 0 ? GUEST_INFO : guest_info,
+            pageSize: "10"
+        })
+    </script>
+    <!-- Valine Comments end -->
+
+
+
+
+
+
+
+
+
+
+</article>
+
+<div id="reward" class="page-modal reward-lay">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <h3 class="reward-title">
+        <i class="icon icon-quote-left"></i>
+        谢谢您的咖啡~
+        <i class="icon icon-quote-right"></i>
+    </h3>
+    <div class="reward-content">
+        
+        <div class="reward-code">
+            <img id="rewardCode" src="/blog/./img/wechat.jpg" alt="打赏二维码">
+        </div>
+        
+        <label class="reward-toggle">
+            <input id="rewardToggle" type="checkbox" class="reward-toggle-check"
+                data-wechat="/blog/./img/wechat.jpg" data-alipay="/blog/./img/alipay.jpg">
+            <div class="reward-toggle-ctrol">
+                <span class="reward-toggle-item wechat">微信</span>
+                <span class="reward-toggle-label"></span>
+                <span class="reward-toggle-item alipay">支付宝</span>
+            </div>
+        </label>
+        
+    </div>
+</div>
+
+
+
+</div>
+
+        <footer class="footer">
+    <div class="top">
+        
+<p>
+    <span id="busuanzi_container_site_uv" style='display:none'>
+        站点总访客数：<span id="busuanzi_value_site_uv"></span>
+    </span>
+    <span id="busuanzi_container_site_pv" style='display:none'>
+        站点总访问量：<span id="busuanzi_value_site_pv"></span>
+    </span>
+</p>
+
+
+        <p>
+            
+                <span><a href="/blog/atom.xml" target="_blank" class="rss" title="rss"><i class="icon icon-lg icon-rss"></i></a></span>
+            
+            <span>博客内容遵循 <a rel="license noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh" target="_blank">知识共享 署名 - 非商业性 - 相同方式共享 4.0 国际协议</a></span>
+        </p>
+    </div>
+    <div class="bottom">
+        <p><span>李洋华 &copy; 2015 - 2020</span>
+            <span>
+                
+                Power by <a href="http://hexo.io/" target="_blank">Hexo</a> Theme <a href="https://github.com/yscoder/hexo-theme-indigo" target="_blank">indigo</a>
+            </span>
+        </p>
+    </div>
+</footer>
+
+    </main>
+    <div class="mask" id="mask"></div>
+<a href="javascript:;" id="gotop" class="waves-effect waves-circle waves-light"><span class="icon icon-lg icon-chevron-up"></span></a>
+
+
+
+<div class="global-share" id="globalShare">
+    <ul class="reset share-icons">
+      <li>
+        <a class="weibo share-sns" target="_blank" href="http://service.weibo.com/share/share.php?url=https://erichmlyh.github.io/blog&title=《Vue高阶组件》 — 无糖咖啡 blog&pic=https://himg.bdimg.com/sys/portrait/item/pp.1.5074730b.lYVoXN7skc2qZvHRo3ncgA.jpg" data-title="微博">
+          <i class="icon icon-weibo"></i>
+        </a>
+      </li>
+      <li>
+        <a class="weixin share-sns wxFab" href="javascript:;" data-title="微信">
+          <i class="icon icon-weixin"></i>
+        </a>
+      </li>
+      <li>
+        <a class="qq share-sns" target="_blank" href="http://connect.qq.com/widget/shareqq/index.html?url=https://erichmlyh.github.io/blog&title=《Vue高阶组件》 — 无糖咖啡 blog&source=" data-title=" QQ">
+          <i class="icon icon-qq"></i>
+        </a>
+      </li>
+      <li>
+        <a class="facebook share-sns" target="_blank" href="https://www.facebook.com/sharer/sharer.php?u=https://erichmlyh.github.io/blog" data-title=" Facebook">
+          <i class="icon icon-facebook"></i>
+        </a>
+      </li>
+      <li>
+        <a class="twitter share-sns" target="_blank" href="https://twitter.com/intent/tweet?text=《Vue高阶组件》 — 无糖咖啡 blog&url=https://erichmlyh.github.io/blog&via=https://erichmlyh.github.io" data-title=" Twitter">
+          <i class="icon icon-twitter"></i>
+        </a>
+      </li>
+      <li>
+        <a class="google share-sns" target="_blank" href="https://plus.google.com/share?url=https://erichmlyh.github.io/blog" data-title=" Google+">
+          <i class="icon icon-google-plus"></i>
+        </a>
+      </li>
+    </ul>
+ </div>
+
+
+<div class="page-modal wx-share" id="wxShare">
+    <a class="close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAK4AAACuCAAAAACKZ2kyAAABuklEQVR42u3ay26DMBAF0Pz/T9NtpYrm3jGYtDpeRRGY481oHn694nV8Wz//T95q311auLi4y9zj15U806Lb/XFxcZ/inn3m7PfvH24PmRhwcXH/Fvdsn2QHXFzc/8RdL3JwcXE/n9umIHkBkxzslloNFxd3gZt3Ke/7fUt/FxcXd8Q9ypWEsJZbfB0XF3cLNw8os/borOB5M9zFxcXdwl1pgtRNjVEmM8y5cHFxR9yWWASa0ZNRRoaLi3sztx14tIOTWeEUJUO4uLi3cWdXrNrBSdsQOQ1/uLi4G7kzUB6Sbix+cHFxb+MmjY+8BGqDY1Ey4eLifgw3vyyVp0fDQ+Li4m7n5kVIngzNLlvUtRouLu6l3PyC5my7lSFrsQMuLu4N3DyJGZ5+FArf3CPDxcV9iNtuOmuk5q1YXFzc/dw87cgvbq6nOK9Z3oSLi7vAPcqVF0h5U7UYzeLi4m7hrl+JmEHzImp4GFxc3GXuVdcmknJo1grBxcV9its2RleGrLNCCxcX9/O5bSDLByrDrgkuLu6j3HawetWAFhcXdz93lqDMmqQtERcXdz/3qpDUNlbaIQ0uLu4W7hfcT0jndgyY8AAAAABJRU5ErkJggg==" alt="微信分享二维码">
+</div>
+
+
+
+
+    <script src="//cdn.bootcss.com/node-waves/0.7.4/waves.min.js"></script>
+<script>
+var BLOG = { ROOT: '/blog/', SHARE: true, REWARD: true };
+
+
+</script>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/main.min.js"></script>
+
+
+<div class="search-panel" id="search-panel">
+    <ul class="search-result" id="search-result"></ul>
+</div>
+<template id="search-tpl">
+<li class="item">
+    <a href="{path}" class="waves-block waves-effect">
+        <div class="title ellipsis" title="{title}">{title}</div>
+        <div class="flex-row flex-middle">
+            <div class="tags ellipsis">
+                {tags}
+            </div>
+            <time class="flex-col time">{date}</time>
+        </div>
+    </a>
+</li>
+</template>
+
+<script src="//unpkg.com/hexo-theme-material-indigo@latest/js/search.min.js" async></script>
+
+
+
+
+
+
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+</body>
+</html>
