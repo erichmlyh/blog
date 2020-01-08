@@ -247,6 +247,6 @@ export default function WithLifeTime(WrappedComponent) {
 > 2. 为何`react`生态没有采用`minxin`，可参考[Mixins Considered Harmful](https://reactjs.org/blog/2016/07/13/mixins-considered-harmful.html)
 > 3. `vue`中，对具名`slot`关于`context`处理的[源码](https://github.com/vuejs/vue/blob/dev/src/core/instance/render-helpers/resolve-slots.js#L23-L34)部分
 > 4. `vue`中，`_self`指向自己[源码](https://github.com/vuejs/vue/blob/dev/src/core/instance/init.js#L50-L51)部分
-> 5. `vue`的`vNode`定义在[源码](https://github.com/vuejs/vue/blob/dev/src/core/vdom/vnode.js#L10)中的位
+> 5. `vue`的`vNode.context`定义在[源码](https://github.com/vuejs/vue/blob/dev/src/core/vdom/vnode.js#L10)中的位
 > 6. `vue 3.0`中，对于`context`将不绑定到`vNode`实例上，这意味着更加灵活的组件声明位置（不止在.vue文件中，不需要到处传递h参数）; 详见[vue rfcs](https://github.com/vuejs/rfcs/blob/master/active-rfcs/0008-render-function-api-change.md), 其中原文内容： `In 3.0 we have found ways to make VNodes context-free. They can now be created anywhere using the globally imported h function, so it only needs to be imported once in any file.`
 > 7. 社区关于`vue HOC` 的讨论 [Discussion: Best way to create a HOC](https://github.com/vuejs/vue/issues/6201)
